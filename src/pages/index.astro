@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import WorkCard from '../components/WorkCard.astro';
+import { getWorks, statusLabel } from '../lib/works';
+
+const works = await getWorks();
+const filters = [['all', 'すべて'], ...Object.entries(statusLabel)] as const;
+---
+<Base>
+  <h1 class="visually-hidden">作品一覧</h1>
+  <div class="filters" role="group" aria-label="status で絞り込み">
+    {filters.map(([value, label], i) => (
+      <button type="button" data-filter={value} aria-pressed={i === 0 ? 'true' : 'false'}>{label}</button>
+    ))}
+  </div>
+  <div class="grid">
+    {works.map((work, i) => <WorkCard work={work} eager={i < 3} />)}
+  </div>
+  <p class="empty" hidden>該当する作品はありません。</p>
+</Base>
+
+<script>
+  const buttons = document.querySelectorAll<HTMLButtonElement>('[data-filter]');
+  const cards = document.querySelectorAll<HTMLElement>('.grid [data-status]');
+  const empty = document.querySelector<HTMLElement>('.empty')!;
+  buttons.forEach((btn) =>
+    btn.addEventListener('click', () => {
+      const f = btn.dataset.filter;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      let shown = 0;
+      cards.forEach((c) => {
+        c.hidden = f !== 'all' && c.dataset.status !== f;
+        if (!c.hidden) shown++;
+      });
+      empty.hidden = shown > 0;
+    }),
+  );
+</script>
+
+<style>
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .filters button {
+    min-height: 44px; padding: 0 16px;
+    border-radius: 999px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text);
+    font: inherit; font-size: .9rem; cursor: pointer;
+  }
+  .filters button[aria-pressed='true'] { background: var(--text); color: var(--bg); border-color: var(--text); }
+  .grid { display: grid; gap: var(--gap); grid-template-columns: 1fr; }
+  @media (min-width: 640px) { .grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1000px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  .empty { color: var(--muted); }
+</style>

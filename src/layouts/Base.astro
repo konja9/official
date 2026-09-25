@@ -1,0 +1,43 @@
+---
+import '../styles/global.css';
+import HaniwaLogo from '../components/HaniwaLogo.astro';
+import { withBase } from '../lib/works';
+
+interface Props { title?: string; description?: string }
+const { title, description = '個人制作のゲーム・アプリの作品集' } = Astro.props;
+const siteName = 'haniwa works';
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <title>{title ? `${title} | ${siteName}` : siteName}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container inner">
+        <a class="brand" href={withBase('/')}>
+          <HaniwaLogo size={32} />
+          <span>{siteName}</span>
+        </a>
+        <nav><a href={withBase('/about/')}>about</a></nav>
+      </div>
+    </header>
+    <main class="container">
+      <slot />
+    </main>
+    <footer class="site-footer container">© {new Date().getFullYear()} {siteName}</footer>
+  </body>
+</html>
+
+<style>
+  .site-header { border-bottom: 1px solid var(--border); }
+  .inner { display: flex; align-items: center; justify-content: space-between; min-height: 60px; }
+  .brand { display: flex; align-items: center; gap: 8px; color: var(--text); text-decoration: none; font-weight: 700; font-size: 1.1rem; }
+  nav a { color: var(--muted); text-decoration: none; padding: 12px 4px; }
+  main { padding-top: 24px; padding-bottom: 48px; }
+  .site-footer { color: var(--muted); font-size: .85rem; padding-bottom: 32px; }
+</style>

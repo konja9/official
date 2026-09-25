@@ -1,0 +1,11 @@
+---
+interface Props { size?: number }
+const { size = 32 } = Astro.props;
+---
+<svg width={size} height={size} viewBox="0 0 64 64" aria-hidden="true">
+  <path d="M16 58V22c0-10 7-18 16-18s16 8 16 18v36z" fill="var(--haniwa)" />
+  <path d="M16 36c-6 0-10 4-10 10h10zM48 36c6 0 10 4 10 10H48z" fill="var(--haniwa-dark)" />
+  <ellipse cx="25" cy="22" rx="3.6" ry="5" fill="var(--haniwa-hole)" />
+  <ellipse cx="39" cy="22" rx="3.6" ry="5" fill="var(--haniwa-hole)" />
+  <ellipse cx="32" cy="36" rx="5" ry="3.4" fill="var(--haniwa-hole)" />
+</svg>

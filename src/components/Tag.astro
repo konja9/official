@@ -1,0 +1,31 @@
+---
+import { platformLabel, statusLabel } from '../lib/works';
+
+type Props =
+  | { kind: 'platform'; value: keyof typeof platformLabel }
+  | { kind: 'status'; value: keyof typeof statusLabel }
+  | { kind: 'text'; value: string };
+const { kind, value } = Astro.props;
+const label =
+  kind === 'platform' ? platformLabel[value as keyof typeof platformLabel]
+  : kind === 'status' ? statusLabel[value as keyof typeof statusLabel]
+  : value;
+---
+<span class:list={['tag', kind, `${kind}-${value}`]}>{label}</span>
+
+<style>
+  .tag {
+    display: inline-block;
+    font-size: .75rem;
+    line-height: 1;
+    padding: 5px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .platform { color: var(--text); }
+  .status-wip { border-style: dashed; }
+  .status-released { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+  .status-archived { opacity: .7; }
+</style>
