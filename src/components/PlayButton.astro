@@ -1,0 +1,11 @@
+---
+import { withBase } from '../lib/works';
+
+interface Props { href: string; label?: string }
+const { href, label = '今すぐ遊ぶ' } = Astro.props;
+const url = withBase(href);
+const external = /^https?:/.test(href);
+---
+<a class="button primary large" href={url} target={external ? '_blank' : undefined} rel={external ? 'noopener' : undefined}>
+  ▶ {label}
+</a>

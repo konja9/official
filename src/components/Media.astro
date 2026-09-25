@@ -1,0 +1,19 @@
+---
+import { isVideo, withBase } from '../lib/works';
+
+interface Props { src: string; title: string }
+const { src, title } = Astro.props;
+const url = withBase(src);
+const isFile = !/^https?:/.test(src) || /\.(mp4|webm|mov|gif|png|jpe?g|webp)$/i.test(src);
+---
+{isFile ? (
+  isVideo(src)
+    ? <video class="media" src={url} controls playsinline muted loop preload="metadata" />
+    : <img class="media" src={url} alt={`${title} のプレイ画面`} />
+) : (
+  <a class="button" href={url} target="_blank" rel="noopener">▶ プレイ動画を見る</a>
+)}
+
+<style>
+  .media { width: 100%; border-radius: var(--radius); border: 1px solid var(--border); background: #000; }
+</style>
